@@ -16,3 +16,5 @@ export default {
   },
   plugins: [],
 } satisfies Config;
+
+// Tailwind's grid utilities are built-in; simply use classes such as `grid`, `grid-cols-3`, etc.

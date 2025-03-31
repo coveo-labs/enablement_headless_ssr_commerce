@@ -1,13 +1,10 @@
 
 import {
   StandaloneProvider,
-  RecommendationProvider
 } from '@/components/providers/providers';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import PopularViewed from '@/components/recommendations/popular-viewed';
 import {
   standaloneEngineDefinition,
-  recommendationEngineDefinition
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
@@ -33,42 +30,21 @@ export default async function Home(){
         country: defaultContext.country,
         currency: defaultContext.currency,
         view: {
-          url: `https://sports.barca.group/`,
+          url: `https://sports.barca.group/product/`,
         },
       },
     },
   });
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      controllers: {
-        popularViewedHome: {enabled: true},
-        cart: {initialState: {items}},
-        context: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: `https://sports.barca.group/cart`,
-          },
-        },
-      },
-    }
-  );
   return (
     <div>
-    <h2>Welcome to our commerce store </h2>
+    <h2>Product Page </h2>
     <StandaloneProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
       <StandaloneSearchBox />
-    </StandaloneProvider>
-    <RecommendationProvider
-      staticState={recsStaticState}
-      navigatorContext={navigatorContext.marshal}
-    >
-      <PopularViewed />
-    </RecommendationProvider>
+    </StandaloneProvider><br/>
+This is a potential product page.
     </div>
   );
 }

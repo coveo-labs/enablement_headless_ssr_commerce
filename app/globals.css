@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -18,4 +16,275 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app-title {
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.app-nav {
+  background: #f0f0f0;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.app-nav a:not(:first-child) {
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+}
+
+.children-container {
+  margin: 0 8px;
+}
+
+h2 {
+  background-color: lightcyan;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-size: 16px;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* New rules to remove the clear cross in search inputs */
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+.search-input::-ms-clear {
+  display: none;
+}
+.search-input::-ms-reveal {
+  display: none;
+}
+
+.search-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+  outline: none;
+}
+
+.clear-button,
+.search-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clear-button {
+  background-color: #e0e0e0;
+  color: #424242;
+  margin-left: 8px;
+}
+
+.clear-button:hover {
+  background-color: #d5d5d5;
+}
+
+.search-button {
+  background-color: #1976d2;
+  color: #fff;
+  margin-left: 8px;
+}
+
+.search-button:hover {
+  background-color: #115293;
+}
+
+/* New styles for search suggestions dropdown similar to Material UI */
+.search-suggestions {
+  position: absolute;
+  margin-top: 4px;
+  width: 100%;
+  max-width: 300px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  list-style: none; /* removes bullet points */
+  padding: 0;
+  z-index: 100;
+}
+
+.search-suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.search-suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.search-suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+/* New styles for alternate suggestion box */
+.search-suggestions-alt {
+  position: absolute;
+  margin-top: 4px;
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  z-index: 100;
+}
+
+.suggestions-left,
+.instant-products-right {
+  flex: 1;
+  padding: 10px;
+}
+
+.suggestions-left {
+  border-right: 1px solid #eee;
+}
+
+.suggestions-left ul {
+  list-style: none; /* removes bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+.suggestions-left li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestions-left li:hover {
+  background-color: #f5f5f5;
+}
+
+/* New styles for product cards */
+.product-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.product-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.product-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 8px;
+}
+
+.product-card .product-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* New styles for instant products within suggestions-alt */
+.instant-products-right .product-card-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.instant-products-right .product-card {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: none;
+  text-align: center;
+}
+.FacetDisplayName {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.facet-box {
+  margin: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid black;
+}
+
+.facet-checkbox {
+  margin-right: 0.5rem;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.facet-container {
+  flex: 1;
+}
+
+.product-container {
+  flex: 5;
+}
+
+.FacetSearchInput {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-size: 14px;
+  width: 100%;
+  max-width: 200px;
+}
+.FacetSearchInput:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+  outline: none;
+}
+
+.FacetSearch {
+  display: flex;
+  align-items: center;
+}
+
+.FacetSearchClear {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #e0e0e0;
+  color: #424242;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 8px;
+}
+
+.FacetSearchClear:hover {
+  background-color: #d5d5d5;
 }

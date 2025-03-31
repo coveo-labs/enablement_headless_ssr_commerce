@@ -1,0 +1,30 @@
+.carousel {
+  padding: 1rem;
+}
+.headline {
+  /* Improved h3 styling */
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.carouselContainer {
+  /* Carousel container using flex and horizontal scroll */
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+}
+.productCard {
+  /* Each product card style */
+  flex: 0 0 auto;
+  width: 120px;
+  text-align: center;
+  scroll-snap-align: start;
+}
+.productImage {
+  border-radius: 8px;
+}
+.productName {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
