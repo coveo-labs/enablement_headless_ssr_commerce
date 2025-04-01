@@ -14,7 +14,7 @@ import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 
 // This is a hardcoded list of categories that are available in my coveo merchandising hub.
-const categoryList = ['slides-chutes', 'shorts', 'surfs'];
+const categoryList = ['surf-accessories', 'paddleboards', 'toys'];
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
  *

@@ -19,9 +19,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <nav className="app-nav">
           <Link href={'/'}>Home</Link>
           <Link href={'/search'}>Search</Link>
-          <Link href={'/slides-chutes'}>Slides & Chutes</Link>
-          <Link href={'/shorts'}>Shorts</Link>
-          <Link href={'/surfs'}>Surfs</Link>
+          <Link href={'/surf-accessories'}>Surf Accessories</Link>
+          <Link href={'/paddleboards'}>Paddleboards</Link>
+          <Link href={'/toys'}>Toys</Link>
         </nav> <br />
         <div className="children-container">
           {children}
