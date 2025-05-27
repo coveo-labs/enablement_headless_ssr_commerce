@@ -1,16 +1,16 @@
 // lib/commerce-engine.ts
 
-import {defineCommerceEngine} from '@coveo/headless-react/ssr-commerce';
-import engineConfig from './commerce-engine-config';
+import { defineCommerceEngine } from "@coveo/headless-react/ssr-commerce";
+import engineConfig from "./commerce-engine-config";
 
-export const engineDefinition = defineCommerceEngine(engineConfig); 
+export const engineDefinition = defineCommerceEngine(engineConfig);
 
 export const {
-  listingEngineDefinition, 
+  listingEngineDefinition,
   searchEngineDefinition,
   recommendationEngineDefinition,
   standaloneEngineDefinition,
-  useEngine, 
+  useEngine,
 } = engineDefinition;
 
 export const {
@@ -24,4 +24,4 @@ export const {
   useParameterManager,
   usePopularViewedHome,
   useFacetGenerator,
-} = engineDefinition.controllers; 
+} = engineDefinition.controllers;

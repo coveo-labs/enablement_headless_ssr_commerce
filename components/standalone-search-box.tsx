@@ -1,21 +1,19 @@
-'use client';
+"use client";
 
-import {
-  useStandaloneSearchBox,
-} from '../lib/commerce-engine';
-import {useRouter} from 'next/navigation'; 
-import {useEffect} from 'react';
+import { useStandaloneSearchBox } from "../lib/commerce-engine";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function StandaloneSearchBox() {
   const standaloneSearchBox = useStandaloneSearchBox();
 
   const router = useRouter();
 
-  useEffect(() => { 
-    if (standaloneSearchBox.state.redirectTo === '/search') {
+  useEffect(() => {
+    if (standaloneSearchBox.state.redirectTo === "/search") {
       const url = `${standaloneSearchBox.state.redirectTo}?q=${encodeURIComponent(standaloneSearchBox.state.value)}`;
-      router.push(url, {scroll: false});
-      standaloneSearchBox.methods?.afterRedirection(); 
+      router.push(url, { scroll: false });
+      standaloneSearchBox.methods?.afterRedirection();
     }
   }, [standaloneSearchBox.state.redirectTo, standaloneSearchBox.state.value, router, standaloneSearchBox.methods]);
 
@@ -33,21 +31,23 @@ export default function StandaloneSearchBox() {
         value={standaloneSearchBox.state.value}
         onChange={(e) => onSearchBoxInputChange(e)}
       ></input>
-      {standaloneSearchBox.state.value !== '' && (
+      {standaloneSearchBox.state.value !== "" && (
         <span>
-          <button onClick={standaloneSearchBox.methods?.clear} className="clear-button clear-btn" >X</button>
+          <button onClick={standaloneSearchBox.methods?.clear} className="clear-button clear-btn">
+            X
+          </button>
         </span>
       )}
-      <button onClick={() => standaloneSearchBox.methods?.submit()} className="search-button search-btn">Search</button>
+      <button onClick={() => standaloneSearchBox.methods?.submit()} className="search-button search-btn">
+        Search
+      </button>
 
       {standaloneSearchBox.state.suggestions.length > 0 && (
         <ul className="search-suggestions">
           {standaloneSearchBox.state.suggestions.map((suggestion, index) => (
             <li key={index} className="search-suggestion-item">
               <span
-                onClick={() =>
-                  standaloneSearchBox.methods?.selectSuggestion(suggestion.rawValue)
-                }
+                onClick={() => standaloneSearchBox.methods?.selectSuggestion(suggestion.rawValue)}
                 dangerouslySetInnerHTML={{
                   __html: suggestion.highlightedValue,
                 }}

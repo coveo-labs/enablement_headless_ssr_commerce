@@ -1,88 +1,78 @@
-'use client';
+"use client";
 
-import {
-  NumericFacet as HeadlessNumericFacet,
-  NumericFacetState,
-} from '@coveo/headless-react/ssr-commerce';
-import {useEffect, useRef, useState} from 'react';
+import { NumericFacet as HeadlessNumericFacet, NumericFacetState } from "@coveo/headless-react/ssr-commerce";
+import { useEffect, useRef, useState } from "react";
 
-interface INumericFacetProps {
+interface NumericFacetProps {
   controller?: HeadlessNumericFacet;
   staticState: NumericFacetState;
 }
 
-export default function NumericFacet(props: INumericFacetProps) {
-  const {controller, staticState} = props;
+export default function NumericFacet(props: NumericFacetProps) {
+  const { controller, staticState } = props;
 
   const [state, setState] = useState(staticState);
-  const [currentManualRange, setCurrentManualRange] = useState({
-    start:
-      controller?.state.manualRange?.start ??
-      controller?.state.domain?.min ??
-      controller?.state.values[0]?.start ??
-      0,
-    end:
-      controller?.state.manualRange?.end ??
-      controller?.state.domain?.max ??
-      controller?.state.values[0]?.end ??
-      0,
-  });
+
+  const getInitialRange = (ctrl: HeadlessNumericFacet | undefined) => {
+    const min = ctrl?.state.domain?.min || 0;
+    const max = ctrl?.state.domain?.max || 100;
+
+    return {
+      start: ctrl?.state.manualRange?.start ?? min,
+      end: ctrl?.state.manualRange?.end ?? max,
+    };
+  };
+
+  const [currentManualRange, setCurrentManualRange] = useState(getInitialRange(controller));
+  const [sliderValue, setSliderValue] = useState<{
+    start: number;
+    end: number;
+  } | null>(null);
 
   const manualRangeStartInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     controller?.subscribe(() => {
-      setState(controller.state),
-        setCurrentManualRange({
-          start:
-            controller.state.manualRange?.start ??
-            controller.state.domain?.min ??
-            controller.state.values[0]?.start ??
-            0,
-          end:
-            controller.state.manualRange?.end ??
-            controller.state.domain?.max ??
-            controller.state.values[0]?.end ??
-            0,
-        });
+      setState(controller.state);
+      setCurrentManualRange(getInitialRange(controller));
+      setSliderValue(null);
     });
   }, [controller]);
 
   const focusManualRangeStartInput = (): void => {
-    manualRangeStartInputRef.current!.focus();
+    if (manualRangeStartInputRef.current) {
+      manualRangeStartInputRef.current.focus();
+    }
   };
 
-  const invalidRange =
-    currentManualRange.start >= currentManualRange.end ||
-    isNaN(currentManualRange.start) ||
-    isNaN(currentManualRange.end);
+  const updateRange = () => {
+    if (!sliderValue) {
+      return;
+    }
+
+    const { start, end } = sliderValue;
+    if (start < end) {
+      setCurrentManualRange({ start, end });
+      controller?.setRanges([
+        {
+          start,
+          end,
+          endInclusive: true,
+          state: "selected",
+        },
+      ]);
+      setSliderValue(null);
+    }
+  };
 
   const onChangeSliderStart = (value: number) => {
-    const newStart = value;
-    const newEnd = currentManualRange.end;
-    if (newStart < newEnd) {
-      setCurrentManualRange({ start: newStart, end: newEnd });
-      controller?.setRanges([{
-        start: newStart,
-        end: newEnd,
-        endInclusive: true,
-        state: 'selected',
-      }]);
-    }
+    const end = sliderValue?.end ?? currentManualRange.end;
+    setSliderValue({ start: value, end });
   };
 
   const onChangeSliderEnd = (value: number) => {
-    const newStart = currentManualRange.start;
-    const newEnd = value;
-    if (newStart < newEnd) {
-      setCurrentManualRange({ start: newStart, end: newEnd });
-      controller?.setRanges([{
-        start: newStart,
-        end: newEnd,
-        endInclusive: true,
-        state: 'selected',
-      }]);
-    }
+    const start = sliderValue?.start ?? currentManualRange.start;
+    setSliderValue({ start, end: value });
   };
 
   const onClickClearSelectedFacetValues = (): void => {
@@ -90,87 +80,75 @@ export default function NumericFacet(props: INumericFacetProps) {
     focusManualRangeStartInput();
   };
 
+  const calculateStyles = () => {
+    const min = state.domain?.min || 0;
+    const max = state.domain?.max || 100;
+    const range = max - min;
+
+    const values = sliderValue || currentManualRange;
+
+    return {
+      left: `${((values.start - min) / range) * 100}%`,
+      width: `${((values.end - values.start) / range) * 100}%`,
+    };
+  };
+
   const renderManualRangeControls = () => {
+    const { min = 0, max = 100 } = state.domain || {};
+    const styles = calculateStyles();
+
+    const displayValues = sliderValue || currentManualRange;
+
     return (
-      <div className="ManualRangeControls">
-        <div className="ManualRangeLabels">
-          <span>From: {currentManualRange.start}</span>
-          <span>To: {currentManualRange.end}</span>
+      <div className="my-4">
+        {/* Range values display */}
+        <div className="flex justify-between mb-2 text-sm font-medium">
+          <span>From: {displayValues.start}</span>
+          <span>To: {displayValues.end}</span>
         </div>
-        <div className="RangeSliderContainer">
-          <div className="RangeLabels">
-            <span>{state.domain?.min || 0}</span>
-            <span>{state.domain?.max || 100}</span>
+
+        <div className="relative h-10">
+          {/* Min/Max labels */}
+          <div className="flex justify-between mb-2.5 text-xs text-gray-600">
+            <span>{min}</span>
+            <span>{max}</span>
           </div>
-          <div className="RangeTrack">
-            <div 
-              className="RangeFill" 
-              style={{
-                left: `${((currentManualRange.start - (state.domain?.min || 0)) / ((state.domain?.max || 100) - (state.domain?.min || 0))) * 100}%`,
-                width: `${((currentManualRange.end - currentManualRange.start) / ((state.domain?.max || 100) - (state.domain?.min || 0))) * 100}%`
-              }}
-            />
+
+          {/* Range slider track */}
+          <div className="relative w-full h-1 bg-gray-200 rounded mt-5">
+            {/* Selected range indicator */}
+            <div className="absolute h-full bg-blue-500 rounded" style={styles} />
+
+            {/* Start range input */}
             <input
               ref={manualRangeStartInputRef}
               type="range"
-              className="RangeInput RangeInputStart"
-              min={state.domain?.min || 0}
-              max={state.domain?.max || 100}
-              value={currentManualRange.start}
+              className="absolute top-[-8px] w-full appearance-none bg-transparent h-5 pointer-events-none range-input"
+              min={min}
+              max={max}
+              value={displayValues.start}
               onChange={(e) => onChangeSliderStart(Number(e.target.value))}
+              onMouseUp={updateRange}
+              onTouchEnd={updateRange}
             />
+
+            {/* End range input */}
             <input
               type="range"
-              className="RangeInput RangeInputEnd"
-              min={state.domain?.min || 0}
-              max={state.domain?.max || 100}
-              value={currentManualRange.end}
+              className="absolute top-[-8px] w-full appearance-none bg-transparent h-5 pointer-events-none range-input"
+              min={min}
+              max={max}
+              value={displayValues.end}
               onChange={(e) => onChangeSliderEnd(Number(e.target.value))}
+              onMouseUp={updateRange}
+              onTouchEnd={updateRange}
             />
           </div>
         </div>
+
+        {/* Custom slider thumb styling */}
         <style jsx>{`
-          .ManualRangeControls {
-            margin: 1rem 0;
-          }
-          .ManualRangeLabels {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-          }
-          .RangeSliderContainer {
-            position: relative;
-            height: 40px;
-          }
-          .RangeLabels {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-          }
-          .RangeTrack {
-            position: relative;
-            width: 100%;
-            height: 4px;
-            background: #e0e0e0;
-            border-radius: 2px;
-            margin-top: 20px;
-          }
-          .RangeFill {
-            position: absolute;
-            height: 100%;
-            background: #3498db;
-            border-radius: 2px;
-          }
-          .RangeInput {
-            position: absolute;
-            top: -8px;
-            width: 100%;
-            -webkit-appearance: none;
-            pointer-events: none;
-            background: transparent;
-            height: 20px;
-          }
-          .RangeInput::-webkit-slider-thumb {
+          .range-input::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 16px;
             height: 16px;
@@ -180,7 +158,7 @@ export default function NumericFacet(props: INumericFacetProps) {
             pointer-events: auto;
             border: 2px solid white;
           }
-          .RangeInput::-moz-range-thumb {
+          .range-input::-moz-range-thumb {
             width: 16px;
             height: 16px;
             border-radius: 50%;
@@ -194,73 +172,62 @@ export default function NumericFacet(props: INumericFacetProps) {
     );
   };
 
+  /**
+   * Renders the facet value list with checkboxes
+   */
   const renderFacetValues = () => {
+    // Simplify repeated conditions
+    const isDisabled = !controller || state.isLoading;
+
+    // Common button class
+    const buttonClass =
+      "text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+
     return (
-      <div className="FacetValues">
+      <div className="relative">
         <button
           aria-label="Clear selected facet values"
-          className="FacetClear"
-          disabled={!controller || state.isLoading || !state.hasActiveValues}
+          className={`absolute right-0 top-0 ${buttonClass}`}
+          disabled={isDisabled || !state.hasActiveValues}
           onClick={onClickClearSelectedFacetValues}
           title="Clear selected facet values"
           type="reset"
         >
           X
         </button>
-        {state.isLoading && <span> Facet is loading...</span>}
-        <ul>
+
+        {state.isLoading && <span className="block text-sm italic text-gray-600 mb-2">Facet is loading...</span>}
+
+        <ul className="mt-2 space-y-1">
           {state.values.map((value, index) => {
             const checkboxId = `${value.start}-${value.end}-${value.endInclusive}`;
             return (
-              <li className="FacetValue" key={index}>
+              <li className="flex items-center py-1" key={index}>
                 <input
-                  checked={value.state !== 'idle'}
-                  className="FacetValueCheckbox facet-checkbox"
-                  disabled={!controller}
+                  checked={value.state !== "idle"}
+                  className="mr-2 h-4 w-4 cursor-pointer"
+                  disabled={isDisabled}
                   id={checkboxId}
                   onChange={() => controller?.toggleSelect(value)}
                   type="checkbox"
                 />
-                <label className="FacetValueLabel" htmlFor={checkboxId}>
-                  <span className="FacetValueName">
+                <label className="flex-grow text-sm flex items-center cursor-pointer" htmlFor={checkboxId}>
+                  <span className="mr-1">
                     {value.start} to {value.end}
                   </span>
-                  <span className="FacetValueNumberOfProducts">
-                    {' '}
-                    ({value.numberOfResults})
-                  </span>
+                  <span className="text-xs text-gray-500">({value.numberOfResults})</span>
                 </label>
               </li>
             );
           })}
         </ul>
-        <button
-          aria-label="Show more facet values"
-          className="FacetShowMore"
-          disabled={!controller || state.isLoading || !state.canShowMoreValues}
-          onClick={controller?.showMoreValues}
-          title="Show more facet values"
-        >
-          +
-        </button>
-        <button
-          aria-label="Show less facet values"
-          className="FacetShowLess"
-          disabled={!controller || state.isLoading || !state.canShowLessValues}
-          onClick={controller?.showLessValues}
-          title="Show less facet values"
-        >
-          -
-        </button>
       </div>
     );
   };
 
   return (
-    <fieldset className="NumericFacet facet-box">
-      <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
-      </legend>
+    <fieldset className="m-2 pb-2 border-b-2 border-black">
+      <legend className="font-bold bg-gray-100 block w-full p-2">{state.displayName ?? state.facetId}</legend>
       {renderManualRangeControls()}
       {renderFacetValues()}
     </fieldset>

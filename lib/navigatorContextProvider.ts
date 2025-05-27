@@ -1,5 +1,5 @@
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
-import type {ReadonlyHeaders} from 'next/dist/server/web/spec-extension/adapters/headers';
+import { NavigatorContext } from "@coveo/headless-react/ssr-commerce";
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 
 /**
  * This class implements the NavigatorContext interface from Coveo's SSR commerce sub-package.
@@ -20,7 +20,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
    * @returns The referrer URL if available, otherwise undefined.
    */
   get referrer() {
-    return this.headers.get('referer') || this.headers.get('referrer');
+    return this.headers.get("referer") || this.headers.get("referrer");
   }
 
   /**
@@ -28,7 +28,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
    * @returns The user agent string if available, otherwise undefined.
    */
   get userAgent() {
-    return this.headers.get('user-agent');
+    return this.headers.get("user-agent");
   }
 
   /**
@@ -38,7 +38,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
    * @returns The current location URL if available, otherwise undefined.
    */
   get location() {
-    return this.headers.get('x-href');
+    return this.headers.get("x-href");
   }
 
   /**
@@ -46,7 +46,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
    * @returns The client ID.
    */
   get clientId() {
-    const clientId = this.headers.get('x-coveo-client-id');
+    const clientId = this.headers.get("x-coveo-client-id");
     return clientId!;
   }
 

@@ -1,19 +1,15 @@
-'use client';
+"use client";
 
-import {
-  useInstantProducts,
-  useSearchBox,
-} from '@/lib/commerce-engine';
-import {useState} from 'react';
-import InstantProducts from './instant-product';
+import { useInstantProducts, useSearchBox } from "@/lib/commerce-engine";
+import { useState } from "react";
+import InstantProducts from "./instant-product";
 
 export default function SearchBox() {
-  const {state, methods} = useSearchBox();
-  const {state: instantProductsState, methods: instantProductsController} =
-    useInstantProducts();
+  const { state, methods } = useSearchBox();
+  const { state: instantProductsState, methods: instantProductsController } = useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+  const [, setIsSelectingSuggestion] = useState(false);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -44,20 +40,22 @@ export default function SearchBox() {
         onFocus={handleFocus}
         onBlur={handleBlur}
       ></input>
-      {state.value !== '' && (
+      {state.value !== "" && (
         <span>
-          <button 
-            onClick={() => { 
-              methods?.clear(); 
-              methods?.submit(); 
-            }} 
+          <button
+            onClick={() => {
+              methods?.clear();
+              methods?.submit();
+            }}
             className="clear-button clear-btn"
           >
             X
           </button>
         </span>
       )}
-      <button onClick={methods?.submit} className="search-button search-btn">Search</button>
+      <button onClick={methods?.submit} className="search-button search-btn">
+        Search
+      </button>
 
       {isInputFocused && state.suggestions.length > 0 && (
         <div className="search-suggestions-alt">

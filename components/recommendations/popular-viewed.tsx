@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import {usePopularViewedHome} from '@/lib/commerce-engine';
-import Image from 'next/image';
-import styles from './popular-viewed.module.css';
+import { usePopularViewedHome } from "@/lib/commerce-engine";
+import Image from "next/image";
+import styles from "./popular-viewed.module.css";
 
 export default function PopularViewed() {
-  const {state} = usePopularViewedHome();
+  const { state } = usePopularViewedHome();
 
   return (
     <>

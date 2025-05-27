@@ -1,48 +1,42 @@
-'use client';
+"use client";
 
-import {useFacetGenerator} from '@/lib/commerce-engine';
-import CategoryFacet from './category-facet';
-import NumericFacet from './numeric-facet';
-import RegularFacet from './regular-facet';
+import { useFacetGenerator } from "@/lib/commerce-engine";
+import CategoryFacet from "./category-facet";
+import NumericFacet from "./numeric-facet";
+import RegularFacet from "./regular-facet";
 
 export default function FacetGenerator() {
-  const {state, methods} = useFacetGenerator();
+  const { state, methods } = useFacetGenerator();
 
   return (
-    <nav className="Facets">
+    <nav className="flex flex-col space-y-4">
       {state.map((facetState) => {
         const facetId = facetState.facetId;
         switch (facetState.type) {
-          case 'regular': {
+          case "regular": {
             return (
               <RegularFacet
                 key={facetId}
-                controller={methods?.getFacetController(facetId, 'regular')}
+                controller={methods?.getFacetController(facetId, "regular")}
                 staticState={facetState}
               />
             );
           }
 
-          case 'numericalRange':
+          case "numericalRange":
             return (
               <NumericFacet
                 key={facetId}
-                controller={methods?.getFacetController(
-                  facetId,
-                  'numericalRange'
-                )}
+                controller={methods?.getFacetController(facetId, "numericalRange")}
                 staticState={facetState}
               />
             );
 
-          case 'hierarchical':
+          case "hierarchical":
             return (
               <CategoryFacet
                 key={facetId}
-                controller={methods?.getFacetController(
-                  facetId,
-                  'hierarchical'
-                )}
+                controller={methods?.getFacetController(facetId, "hierarchical")}
                 staticState={facetState}
               />
             );

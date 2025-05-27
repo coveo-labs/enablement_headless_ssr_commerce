@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import {useParameterManager} from '@/lib/commerce-engine';
-import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {useSearchParams} from 'next/navigation';
-import {useEffect, useMemo, useRef} from 'react';
+import { useParameterManager } from "@/lib/commerce-engine";
+import { buildParameterSerializer } from "@coveo/headless-react/ssr-commerce";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef } from "react";
 
-export default function ParameterManager({url}: {url: string | null}) {
-  const {state, methods} = useParameterManager();
+export default function ParameterManager({ url }: { url: string | null }) {
+  const { state, methods } = useParameterManager();
 
-  const {serialize, deserialize} = buildParameterSerializer();
+  const { serialize, deserialize } = buildParameterSerializer();
 
   const initialUrl = useMemo(() => new URL(url ?? location.href), [url]);
   const previousUrl = useRef(initialUrl.href);
