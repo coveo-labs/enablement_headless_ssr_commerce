@@ -46,7 +46,7 @@ export default function FacetGenerator() {
         return (
           <div
             key={facetId}
-            className="bg-white shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200"
+            className="bg-white shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 w-full max-w-full"
           >
             {facetComponent}
           </div>

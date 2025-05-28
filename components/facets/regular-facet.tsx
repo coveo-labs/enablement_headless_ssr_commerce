@@ -33,12 +33,12 @@ export default function RegularFacet(props: RegularFacetProps) {
   const renderFacetValues = () => {
     return (
       <div className="px-6 pb-6">
-        <ul className="list-none p-0 space-y-3">
+        <ul className="list-none p-0 space-y-3 flex flex-col">
           {values.map((value) => (
             <FacetValueItem key={value.value} {...value} onChange={() => controller?.toggleSelect(value)} />
           ))}
         </ul>
-        <div className="px-6 mt-4">
+        <div className="mt-4">
           <FacetShowMoreLess
             onShowLessClick={controller?.showLessValues}
             onShowMoreClick={controller?.showMoreValues}
@@ -50,11 +50,11 @@ export default function RegularFacet(props: RegularFacetProps) {
   };
 
   return (
-    <fieldset className="border-none">
+    <fieldset className="border-none flex flex-col w-full">
       <FacetTitle title={displayName ?? facetId}>
         {hasActiveValues && <FacetClearButton onClear={() => controller?.deselectAll()} />}
       </FacetTitle>
-      <div className="px-6">
+      <div className="px-6 w-full">
         <FacetSearch
           {...facetState}
           onSearchInputChange={onChangeFacetSearchInput}
@@ -62,7 +62,7 @@ export default function RegularFacet(props: RegularFacetProps) {
         />
       </div>
       {facetSearch.query ? (
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 w-full">
           <FacetSearchResults query={facetState.facetSearch.query}>
             {facetState.facetSearch.values.length === 0 ? null : (
               <RegularFacetSearchResultsList

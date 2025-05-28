@@ -8,12 +8,12 @@ interface FacetValueItemProps extends Pick<RegularFacetValue, "value" | "state" 
 
 export default function FacetValueItem({ value, state, numberOfResults, onChange }: FacetValueItemProps) {
   const checked = state !== "idle";
-  const defaultContainerClasses = "flex items-center group";
+  const defaultContainerClasses = "flex items-center group w-full";
   const defaultCheckboxClasses =
-    "mr-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2";
+    "mr-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 flex-shrink-0";
   const defaultLabelClasses =
-    "flex items-center justify-between w-full text-sm text-gray-700 cursor-pointer group-hover:text-gray-900 transition-colors duration-150";
-  const defaultCountClasses = "text-gray-500 bg-gray-100 px-2 py-1 rounded-full text-xs font-medium";
+    "flex items-center justify-between w-full text-sm text-gray-700 cursor-pointer group-hover:text-gray-900 transition-colors duration-150 min-w-0";
+  const defaultCountClasses = "text-gray-500 bg-gray-100 px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ml-2";
 
   const effectiveAriaLabel = `${checked ? "Deselect" : "Select"} facet value '${value}'`;
 
@@ -28,7 +28,7 @@ export default function FacetValueItem({ value, state, numberOfResults, onChange
         type="checkbox"
       />
       <label htmlFor={`${value}-checkbox`} className={defaultLabelClasses}>
-        <span className="font-medium">{value}</span>
+        <span className="font-medium truncate block">{value}</span>
         <span className={defaultCountClasses}>{numberOfResults}</span>
       </label>
     </li>

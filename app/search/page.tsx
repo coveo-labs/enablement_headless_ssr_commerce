@@ -39,11 +39,11 @@ export default async function Search({ searchParams }: { searchParams: Promise<U
     <SearchProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
       <ParameterManager url={navigatorContext.location} />
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="md:col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1 order-1 lg:order-1">
             <FacetGenerator />
           </div>
-          <div className="md:col-span-3">
+          <div className="lg:col-span-3 order-2 lg:order-2">
             <ProductList />
           </div>
         </div>

@@ -115,11 +115,11 @@ export default function CategoryFacet(props: CategoryFacetProps) {
   };
 
   return (
-    <fieldset className="border-none">
+    <fieldset className="border-none flex flex-col w-full">
       <FacetTitle title={displayName ?? facetId}>
         {hasActiveValues && <FacetClearButton onClear={() => controller?.deselectAll()} />}
       </FacetTitle>
-      <div className="px-6">
+      <div className="px-6 w-full">
         <FacetSearch
           {...facetState}
           onSearchInputChange={onChangeFacetSearchInput}
@@ -127,7 +127,7 @@ export default function CategoryFacet(props: CategoryFacetProps) {
         />
       </div>
       {facetSearch.query ? (
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 w-full">
           <FacetSearchResults query={facetSearch.query}>
             {facetSearch.values.length === 0 ? null : (
               <CategoryFacetSearchResultsList
