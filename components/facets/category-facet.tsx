@@ -100,7 +100,7 @@ export default function CategoryFacet(props: CategoryFacetProps) {
 
   const renderFacetValues = () => {
     return (
-      <div>
+      <div className="pb-6">
         {renderRootValues()}
         {renderActiveFacetValueTree()}
         <div className="px-6 mt-4">
