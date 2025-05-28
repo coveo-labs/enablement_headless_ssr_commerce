@@ -9,7 +9,7 @@ export default function FacetGenerator() {
   const { state, methods } = useFacetGenerator();
 
   return (
-    <nav className="flex flex-col space-y-6 p-6">
+    <nav className="flex flex-col space-y-6">
       {state.map((facetState) => {
         const facetId = facetState.facetId;
         let facetComponent;

@@ -8,7 +8,7 @@ export default function ProductList() {
 
   return (
     <>
-      <div className="mt-2 w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" aria-label="Product List">
+      <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" aria-label="Product List">
         {state.products.map((product) => (
           <ProductButtonWithImage methods={methods} product={product} key={product.permanentid} />
         ))}

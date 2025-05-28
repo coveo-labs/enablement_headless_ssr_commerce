@@ -1,7 +1,6 @@
 import ParameterManager from "@/components/parameter-manager";
 import ProductList from "@/components/product-list";
 import { ListingProvider } from "@/components/providers/providers";
-import StandaloneSearchBox from "@/components/standalone-search-box";
 import { listingEngineDefinition } from "@/lib/commerce-engine";
 import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
 import { defaultContext } from "@/utils/context";
@@ -62,7 +61,6 @@ export default async function Listing({
       <ParameterManager url={navigatorContext.location} />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ flex: 2 }}>
-          <StandaloneSearchBox />
           <ProductList />
         </div>
       </div>
