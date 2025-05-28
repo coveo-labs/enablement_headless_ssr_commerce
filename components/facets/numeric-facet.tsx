@@ -2,6 +2,9 @@
 
 import { NumericFacet as HeadlessNumericFacet, NumericFacetState } from "@coveo/headless-react/ssr-commerce";
 import { useEffect, useRef, useState } from "react";
+import FacetTitle from "./facet-title";
+import FacetClearButton from "./facet-clear-button";
+import { useFacetState } from "./useFacetState";
 
 interface NumericFacetProps {
   controller?: HeadlessNumericFacet;
@@ -11,7 +14,7 @@ interface NumericFacetProps {
 export default function NumericFacet(props: NumericFacetProps) {
   const { controller, staticState } = props;
 
-  const [facetState, setFacetState] = useState(staticState);
+  const facetState = useFacetState(controller, staticState);
 
   const getInitialRange = (ctrl: HeadlessNumericFacet | undefined) => {
     const min = ctrl?.state.domain?.min || 0;
@@ -32,11 +35,12 @@ export default function NumericFacet(props: NumericFacetProps) {
   const manualRangeStartInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    controller?.subscribe(() => {
-      setFacetState(controller.state);
+    const updateState = () => {
       setCurrentManualRange(getInitialRange(controller));
       setSliderValue(null);
-    });
+    };
+
+    return controller?.subscribe(updateState);
   }, [controller]);
 
   const focusManualRangeStartInput = (): void => {
@@ -75,11 +79,6 @@ export default function NumericFacet(props: NumericFacetProps) {
     setSliderValue({ start, end: value });
   };
 
-  const onClickClearSelectedFacetValues = (): void => {
-    controller?.deselectAll();
-    focusManualRangeStartInput();
-  };
-
   const calculateStyles = () => {
     const min = facetState.domain?.min || 0;
     const max = facetState.domain?.max || 100;
@@ -100,30 +99,30 @@ export default function NumericFacet(props: NumericFacetProps) {
     const displayValues = sliderValue || currentManualRange;
 
     return (
-      <div className="my-4">
+      <div className="px-6 py-4 bg-gray-50 border-b border-gray-100">
         {/* Range values display */}
-        <div className="flex justify-between mb-2 text-sm font-medium">
-          <span>From: {displayValues.start}</span>
-          <span>To: {displayValues.end}</span>
+        <div className="flex justify-between mb-3 text-sm font-semibold text-gray-700">
+          <span className="bg-white px-3 py-1 rounded-lg shadow-sm border">From: {displayValues.start}</span>
+          <span className="bg-white px-3 py-1 rounded-lg shadow-sm border">To: {displayValues.end}</span>
         </div>
 
-        <div className="relative h-10">
+        <div className="relative h-12">
           {/* Min/Max labels */}
-          <div className="flex justify-between mb-2.5 text-xs text-gray-600">
+          <div className="flex justify-between mb-3 text-xs text-gray-500 font-medium">
             <span>{min}</span>
             <span>{max}</span>
           </div>
 
           {/* Range slider track */}
-          <div className="relative w-full h-1 bg-gray-200 rounded mt-5">
+          <div className="relative w-full h-2 bg-gray-200 rounded-full mt-5">
             {/* Selected range indicator */}
-            <div className="absolute h-full bg-blue-500 rounded" style={styles} />
+            <div className="absolute h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" style={styles} />
 
             {/* Start range input */}
             <input
               ref={manualRangeStartInputRef}
               type="range"
-              className="absolute top-[-8px] w-full appearance-none bg-transparent h-5 pointer-events-none range-input"
+              className="absolute top-[-6px] w-full appearance-none bg-transparent h-6 pointer-events-none range-input"
               min={min}
               max={max}
               value={displayValues.start}
@@ -135,7 +134,7 @@ export default function NumericFacet(props: NumericFacetProps) {
             {/* End range input */}
             <input
               type="range"
-              className="absolute top-[-8px] w-full appearance-none bg-transparent h-5 pointer-events-none range-input"
+              className="absolute top-[-6px] w-full appearance-none bg-transparent h-6 pointer-events-none range-input"
               min={min}
               max={max}
               value={displayValues.end}
@@ -150,22 +149,24 @@ export default function NumericFacet(props: NumericFacetProps) {
         <style jsx>{`
           .range-input::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #3498db;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             cursor: pointer;
             pointer-events: auto;
-            border: 2px solid white;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
           .range-input::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #3498db;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             cursor: pointer;
             pointer-events: auto;
-            border: 2px solid white;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
         `}</style>
       </div>
@@ -175,38 +176,30 @@ export default function NumericFacet(props: NumericFacetProps) {
   const renderFacetValues = () => {
     const isDisabled = !controller || facetState.isLoading;
     return (
-      <div className="relative">
-        <button
-          aria-label="Clear selected facet values"
-          className={`absolute right-0 top-0 text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
-          disabled={isDisabled || !facetState.hasActiveValues}
-          onClick={onClickClearSelectedFacetValues}
-          title="Clear selected facet values"
-          type="reset"
-        >
-          X
-        </button>
-
-        {facetState.isLoading && <span className="block text-sm italic text-gray-600 mb-2">Facet is loading...</span>}
-
-        <ul className="mt-2 space-y-1">
+      <div className="px-6 pb-6">
+        <ul className="mt-4 space-y-3">
           {facetState.values.map((value, index) => {
             const checkboxId = `${value.start}-${value.end}-${value.endInclusive}`;
             return (
-              <li className="flex items-center py-1" key={index}>
+              <li className="flex items-center group" key={index}>
                 <input
                   checked={value.state !== "idle"}
-                  className="mr-2 h-4 w-4 cursor-pointer"
+                  className="mr-3 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                   disabled={isDisabled}
                   id={checkboxId}
                   onChange={() => controller?.toggleSelect(value)}
                   type="checkbox"
                 />
-                <label className="flex-grow text-sm flex items-center cursor-pointer" htmlFor={checkboxId}>
-                  <span className="mr-1">
+                <label
+                  className="flex items-center justify-between w-full text-sm text-gray-700 cursor-pointer group-hover:text-gray-900 transition-colors duration-150"
+                  htmlFor={checkboxId}
+                >
+                  <span className="font-medium">
                     {value.start} to {value.end}
                   </span>
-                  <span className="text-xs text-gray-500">({value.numberOfResults})</span>
+                  <span className="text-gray-500 bg-gray-100 px-2 py-1 rounded-full text-xs font-medium">
+                    {value.numberOfResults}
+                  </span>
                 </label>
               </li>
             );
@@ -217,8 +210,17 @@ export default function NumericFacet(props: NumericFacetProps) {
   };
 
   return (
-    <fieldset className="m-2 pb-2 border-b-2 border-black">
-      <legend className="font-bold bg-gray-100 block w-full p-2">{facetState.displayName ?? facetState.facetId}</legend>
+    <fieldset className="border-none">
+      <FacetTitle title={facetState.displayName ?? facetState.facetId}>
+        {facetState.hasActiveValues && (
+          <FacetClearButton
+            onClear={() => {
+              controller?.deselectAll();
+              focusManualRangeStartInput();
+            }}
+          />
+        )}
+      </FacetTitle>
       {renderManualRangeControls()}
       {renderFacetValues()}
     </fieldset>

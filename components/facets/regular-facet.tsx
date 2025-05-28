@@ -1,25 +1,24 @@
 "use client";
 
 import { RegularFacet as HeadlessRegularFacet, RegularFacetState } from "@coveo/headless-react/ssr-commerce";
-import { useEffect, useState } from "react";
 import FacetShowMoreLess from "./show-more-less";
 import FacetSearch from "./facet-search";
 import FacetSearchResults, { RegularFacetSearchResultsList } from "./facet-search-results";
+import FacetTitle from "./facet-title";
+import FacetClearButton from "./facet-clear-button";
+import FacetValueItem from "./facet-value-item";
+import { useFacetState } from "./useFacetState";
 
-interface IRegularFacetProps {
+interface RegularFacetProps {
   controller?: HeadlessRegularFacet;
   staticState: RegularFacetState;
 }
 
-export default function RegularFacet(props: IRegularFacetProps) {
+export default function RegularFacet(props: RegularFacetProps) {
   const { controller, staticState } = props;
 
-  const [facetState, setFacetState] = useState(staticState);
-  const { isLoading, hasActiveValues, facetId, displayName, values, facetSearch } = facetState;
-
-  useEffect(() => {
-    controller?.subscribe(() => setFacetState(controller.state));
-  }, [controller]);
+  const facetState = useFacetState(controller, staticState);
+  const { hasActiveValues, facetId, displayName, values, facetSearch } = facetState;
 
   const onChangeFacetSearchInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.value === "") {
@@ -33,66 +32,49 @@ export default function RegularFacet(props: IRegularFacetProps) {
 
   const renderFacetValues = () => {
     return (
-      <div>
-        <button
-          aria-label="Clear selected facet values"
-          className="px-4 py-2 border-none rounded bg-gray-200 text-gray-700 text-base cursor-pointer transition-colors duration-200 hover:bg-gray-300"
-          disabled={!controller || isLoading || !hasActiveValues}
-          onClick={() => controller?.deselectAll()}
-          type="reset"
-        >
-          X
-        </button>
-        {isLoading && <span> Facet is loading...</span>}
-        <ul className="list-none p-0">
+      <div className="px-6 pb-6">
+        <ul className="list-none p-0 space-y-3">
           {values.map((value) => (
-            <li key={value.value}>
-              <input
-                aria-label={`${value.state === "idle" ? "Select" : "Deselect"} facet value '${value.value}'`}
-                checked={value.state !== "idle"}
-                className="mr-2"
-                disabled={!controller || isLoading}
-                id={value.value}
-                onChange={() => controller?.toggleSelect(value)}
-                type="checkbox"
-              ></input>
-              <label htmlFor={value.value}>
-                <span>{value.value}</span>
-                <span> ({value.numberOfResults})</span>
-              </label>
-            </li>
+            <FacetValueItem key={value.value} {...value} onChange={() => controller?.toggleSelect(value)} />
           ))}
         </ul>
-        <FacetShowMoreLess
-          onShowLessClick={controller?.showLessValues}
-          onShowMoreClick={controller?.showMoreValues}
-          {...facetState}
-        />
+        <div className="px-6 mt-4">
+          <FacetShowMoreLess
+            onShowLessClick={controller?.showLessValues}
+            onShowMoreClick={controller?.showMoreValues}
+            {...facetState}
+          />
+        </div>
       </div>
     );
   };
 
   return (
-    <fieldset className="mx-2 pb-2 border-b-2 border-black">
-      <legend className="font-bold bg-gray-100 block w-full p-2">{displayName ?? facetId}</legend>
-      <FacetSearch
-        {...facetState}
-        onSearchInputChange={onChangeFacetSearchInput}
-        onClearClick={() => controller?.facetSearch.clear()}
-      />
+    <fieldset className="border-none">
+      <FacetTitle title={displayName ?? facetId}>
+        {hasActiveValues && <FacetClearButton onClear={() => controller?.deselectAll()} />}
+      </FacetTitle>
+      <div className="px-6">
+        <FacetSearch
+          {...facetState}
+          onSearchInputChange={onChangeFacetSearchInput}
+          onClearClick={() => controller?.facetSearch.clear()}
+        />
+      </div>
       {facetSearch.query ? (
-        <FacetSearchResults query={facetState.facetSearch.query}>
-          {facetState.facetSearch.values.length === 0 ? null : (
-            <RegularFacetSearchResultsList
-              values={facetState.facetSearch.values}
-              onResultClick={(value) => {
-                controller?.facetSearch.select(value);
-                controller?.facetSearch.clear();
-              }}
-              query={facetState.facetSearch.query}
-            />
-          )}
-        </FacetSearchResults>
+        <div className="px-6 pb-6">
+          <FacetSearchResults query={facetState.facetSearch.query}>
+            {facetState.facetSearch.values.length === 0 ? null : (
+              <RegularFacetSearchResultsList
+                {...facetSearch}
+                onResultClick={(value) => {
+                  controller?.facetSearch.select(value);
+                  controller?.facetSearch.clear();
+                }}
+              />
+            )}
+          </FacetSearchResults>
+        </div>
       ) : (
         renderFacetValues()
       )}

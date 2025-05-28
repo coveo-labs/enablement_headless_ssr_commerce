@@ -9,41 +9,48 @@ export default function FacetGenerator() {
   const { state, methods } = useFacetGenerator();
 
   return (
-    <nav className="flex flex-col space-y-4">
+    <nav className="flex flex-col space-y-6 p-6">
       {state.map((facetState) => {
         const facetId = facetState.facetId;
+        let facetComponent;
+
         switch (facetState.type) {
-          case "regular": {
-            return (
-              <RegularFacet
-                key={facetId}
-                controller={methods?.getFacetController(facetId, "regular")}
-                staticState={facetState}
-              />
+          case "regular":
+            facetComponent = (
+              <RegularFacet controller={methods?.getFacetController(facetId, "regular")} staticState={facetState} />
             );
-          }
+            break;
 
           case "numericalRange":
-            return (
+            facetComponent = (
               <NumericFacet
-                key={facetId}
                 controller={methods?.getFacetController(facetId, "numericalRange")}
                 staticState={facetState}
               />
             );
+            break;
 
           case "hierarchical":
-            return (
+            facetComponent = (
               <CategoryFacet
-                key={facetId}
                 controller={methods?.getFacetController(facetId, "hierarchical")}
                 staticState={facetState}
               />
             );
+            break;
 
           default:
             return null;
         }
+
+        return (
+          <div
+            key={facetId}
+            className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200"
+          >
+            {facetComponent}
+          </div>
+        );
       })}
     </nav>
   );
