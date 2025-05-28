@@ -11,7 +11,7 @@ interface NumericFacetProps {
 export default function NumericFacet(props: NumericFacetProps) {
   const { controller, staticState } = props;
 
-  const [state, setState] = useState(staticState);
+  const [facetState, setFacetState] = useState(staticState);
 
   const getInitialRange = (ctrl: HeadlessNumericFacet | undefined) => {
     const min = ctrl?.state.domain?.min || 0;
@@ -33,7 +33,7 @@ export default function NumericFacet(props: NumericFacetProps) {
 
   useEffect(() => {
     controller?.subscribe(() => {
-      setState(controller.state);
+      setFacetState(controller.state);
       setCurrentManualRange(getInitialRange(controller));
       setSliderValue(null);
     });
@@ -81,8 +81,8 @@ export default function NumericFacet(props: NumericFacetProps) {
   };
 
   const calculateStyles = () => {
-    const min = state.domain?.min || 0;
-    const max = state.domain?.max || 100;
+    const min = facetState.domain?.min || 0;
+    const max = facetState.domain?.max || 100;
     const range = max - min;
 
     const values = sliderValue || currentManualRange;
@@ -94,7 +94,7 @@ export default function NumericFacet(props: NumericFacetProps) {
   };
 
   const renderManualRangeControls = () => {
-    const { min = 0, max = 100 } = state.domain || {};
+    const { min = 0, max = 100 } = facetState.domain || {};
     const styles = calculateStyles();
 
     const displayValues = sliderValue || currentManualRange;
@@ -172,23 +172,14 @@ export default function NumericFacet(props: NumericFacetProps) {
     );
   };
 
-  /**
-   * Renders the facet value list with checkboxes
-   */
   const renderFacetValues = () => {
-    // Simplify repeated conditions
-    const isDisabled = !controller || state.isLoading;
-
-    // Common button class
-    const buttonClass =
-      "text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
-
+    const isDisabled = !controller || facetState.isLoading;
     return (
       <div className="relative">
         <button
           aria-label="Clear selected facet values"
-          className={`absolute right-0 top-0 ${buttonClass}`}
-          disabled={isDisabled || !state.hasActiveValues}
+          className={`absolute right-0 top-0 text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+          disabled={isDisabled || !facetState.hasActiveValues}
           onClick={onClickClearSelectedFacetValues}
           title="Clear selected facet values"
           type="reset"
@@ -196,10 +187,10 @@ export default function NumericFacet(props: NumericFacetProps) {
           X
         </button>
 
-        {state.isLoading && <span className="block text-sm italic text-gray-600 mb-2">Facet is loading...</span>}
+        {facetState.isLoading && <span className="block text-sm italic text-gray-600 mb-2">Facet is loading...</span>}
 
         <ul className="mt-2 space-y-1">
-          {state.values.map((value, index) => {
+          {facetState.values.map((value, index) => {
             const checkboxId = `${value.start}-${value.end}-${value.endInclusive}`;
             return (
               <li className="flex items-center py-1" key={index}>
@@ -227,7 +218,7 @@ export default function NumericFacet(props: NumericFacetProps) {
 
   return (
     <fieldset className="m-2 pb-2 border-b-2 border-black">
-      <legend className="font-bold bg-gray-100 block w-full p-2">{state.displayName ?? state.facetId}</legend>
+      <legend className="font-bold bg-gray-100 block w-full p-2">{facetState.displayName ?? facetState.facetId}</legend>
       {renderManualRangeControls()}
       {renderFacetValues()}
     </fieldset>
