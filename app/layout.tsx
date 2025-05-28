@@ -7,7 +7,6 @@ import { headers } from "next/headers";
 import { standaloneEngineDefinition } from "@/lib/commerce-engine";
 import { CartInitialState } from "@coveo/headless-react/ssr-commerce";
 import { defaultContext } from "@/utils/context";
-import StandaloneSearchBox from "@/components/standalone-search-box";
 
 export const metadata = {
   title: "Headless SSR examples",
