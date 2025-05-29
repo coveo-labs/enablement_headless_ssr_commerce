@@ -7,6 +7,8 @@ import { headers } from "next/headers";
 import { standaloneEngineDefinition } from "@/lib/commerce-engine";
 import { CartInitialState } from "@coveo/headless-react/ssr-commerce";
 import { defaultContext } from "@/utils/context";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export const metadata = {
   title: "Headless SSR examples",
@@ -47,17 +49,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   href="/"
                   className="flex items-center gap-2 text-blue-600 font-bold text-xl hover:text-blue-800 transition-colors"
                 >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-blue-600"
-                  >
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor" />
-                  </svg>
-                  <span>Coveo Commerce</span>
+                  <Image
+                    src="/Coveo_Horizontal_Blue.svg"
+                    alt="Coveo Logo"
+                    width={120}
+                    height={30}
+                    className="h-8 w-auto"
+                  />
                 </Link>
               </div>
 
@@ -91,7 +89,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </div>
 
               <div className="flex items-center justify-end w-20">
-                {/* Space for potential future actions like cart, profile, etc. */}
+                <Link href="/cart" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                  <span className="sr-only">Shopping Cart</span>
+                  <ShoppingCartIcon className="w-6 h-6" />
+                </Link>
               </div>
             </div>
           </div>
