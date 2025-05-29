@@ -1,10 +1,11 @@
 import ParameterManager from "@/components/parameter-manager";
 import ProductList from "@/components/product-list";
 import { ListingProvider } from "@/components/providers/providers";
+import { CartService } from "@/lib/cart-service";
 import { listingEngineDefinition } from "@/lib/commerce-engine";
 import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
 import { defaultContext } from "@/utils/context";
-import { buildParameterSerializer, CartInitialState } from "@coveo/headless-react/ssr-commerce";
+import { buildParameterSerializer } from "@coveo/headless-react/ssr-commerce";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
@@ -37,8 +38,8 @@ export default async function Listing({
   const { deserialize } = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
 
-  // Fetches the cart items from an external service
-  const items: CartInitialState["items"] = [];
+  // Fetches the cart items from the cart service
+  const items = CartService.getCartItemsWithMetadata();
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState({

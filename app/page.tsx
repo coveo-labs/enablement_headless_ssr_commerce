@@ -4,15 +4,15 @@ import { standaloneEngineDefinition, recommendationEngineDefinition } from "@/li
 import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
 import { defaultContext } from "@/utils/context";
 import { headers } from "next/headers";
-import { CartInitialState } from "@coveo/headless-react/ssr-commerce";
+import { CartService } from "@/lib/cart-service";
 
 export default async function Home() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   standaloneEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
-  // Fetches the cart items from an external service
-  const items: CartInitialState["items"] = [];
+  // Fetches the cart items from the cart service
+  const items = CartService.getCartItemsWithMetadata();
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
     controllers: {

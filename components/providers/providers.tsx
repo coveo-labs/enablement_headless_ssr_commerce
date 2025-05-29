@@ -9,6 +9,7 @@ import {
   recommendationEngineDefinition,
 } from "@/lib/commerce-engine";
 import { buildProviderWithDefinition } from "@coveo/headless-react/ssr-commerce";
+import { MockedCartProvider } from "./cart-provider";
 
 // Wraps listing pages to provide context for listing-specific hooks
 export const ListingProvider = buildProviderWithDefinition(listingEngineDefinition);
@@ -20,3 +21,6 @@ export const SearchProvider = buildProviderWithDefinition(searchEngineDefinition
 export const RecommendationProvider = buildProviderWithDefinition(recommendationEngineDefinition);
 
 export const StandaloneProvider = buildProviderWithDefinition(standaloneEngineDefinition);
+
+// Export CartProvider for use in layout
+export { MockedCartProvider };

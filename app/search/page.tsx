@@ -4,11 +4,12 @@ import FacetGenerator from "@/components/facets/facet-generator";
 import { searchEngineDefinition } from "@/lib/commerce-engine";
 import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
 import { defaultContext } from "@/utils/context";
-import { buildParameterSerializer, CartInitialState } from "@coveo/headless-react/ssr-commerce";
+import { buildParameterSerializer } from "@coveo/headless-react/ssr-commerce";
 import ParameterManager from "@/components/parameter-manager";
 import { headers } from "next/headers";
 import Sort from "@/components/sort";
 import Pagination from "@/components/pagination";
+import { CartService } from "@/lib/cart-service";
 
 export default async function Search({ searchParams }: { searchParams: Promise<URLSearchParams> }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
@@ -18,8 +19,8 @@ export default async function Search({ searchParams }: { searchParams: Promise<U
   const { deserialize } = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
 
-  // Fetches the cart items from an external service
-  const items: CartInitialState["items"] = [];
+  // Get formatted cart items from the cart service
+  const items = CartService.getCartItemsWithMetadata();
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await searchEngineDefinition.fetchStaticState({

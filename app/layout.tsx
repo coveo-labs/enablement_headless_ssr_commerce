@@ -1,13 +1,13 @@
 import Link from "next/link";
 import "./globals.css";
-import { StandaloneProvider } from "@/components/providers/providers";
+import { StandaloneProvider, MockedCartProvider } from "@/components/providers/providers";
 import SearchBox from "@/components/search-box";
+import CartLink from "@/components/cart-link";
 import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
 import { headers } from "next/headers";
 import { standaloneEngineDefinition } from "@/lib/commerce-engine";
-import { CartInitialState } from "@coveo/headless-react/ssr-commerce";
 import { defaultContext } from "@/utils/context";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { CartService } from "@/lib/cart-service";
 import Image from "next/image";
 
 export const metadata = {
@@ -20,8 +20,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const navigatorContext = new NextJsNavigatorContext(headers());
   standaloneEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
-  // Fetches the cart items from an external service
-  const items: CartInitialState["items"] = [];
+  // Fetches the cart items from the cart service
+  const items = CartService.getCartItemsWithMetadata();
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await standaloneEngineDefinition.fetchStaticState({
@@ -41,63 +41,62 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="app-body">
-        <header className="sticky top-0 z-50 bg-white shadow-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 text-blue-600 font-bold text-xl hover:text-blue-800 transition-colors"
-                >
-                  <Image
-                    src="/Coveo_Horizontal_Blue.svg"
-                    alt="Coveo Logo"
-                    width={120}
-                    height={30}
-                    className="h-8 w-auto"
-                  />
-                </Link>
-              </div>
+        <MockedCartProvider>
+          <header className="sticky top-0 z-50 bg-white shadow-md">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 text-blue-600 font-bold text-xl hover:text-blue-800 transition-colors"
+                  >
+                    <Image
+                      src="/Coveo_Horizontal_Blue.svg"
+                      alt="Coveo Logo"
+                      width={120}
+                      height={30}
+                      className="h-8 w-auto"
+                    />
+                  </Link>
+                </div>
 
-              <nav className="hidden md:flex items-center space-x-8">
-                <Link
-                  href="/surf-accessories"
-                  className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
-                >
-                  Surf Accessories
-                </Link>
-                <Link
-                  href="/paddleboards"
-                  className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
-                >
-                  Paddleboards
-                </Link>
-                <Link
-                  href="/toys"
-                  className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
-                >
-                  Toys
-                </Link>
-              </nav>
+                <nav className="hidden md:flex items-center space-x-8">
+                  <Link
+                    href="/surf-accessories"
+                    className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+                  >
+                    Surf Accessories
+                  </Link>
+                  <Link
+                    href="/paddleboards"
+                    className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+                  >
+                    Paddleboards
+                  </Link>
+                  <Link
+                    href="/toys"
+                    className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+                  >
+                    Toys
+                  </Link>
+                </nav>
 
-              <div className="flex-1 max-w-md mx-4">
-                <div className="bg-white rounded-lg p-1 transition-all duration-200">
-                  <StandaloneProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
-                    <SearchBox />
-                  </StandaloneProvider>
+                <div className="flex-1 max-w-md mx-4">
+                  <div className="bg-white rounded-lg p-1 transition-all duration-200">
+                    <StandaloneProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
+                      <SearchBox />
+                    </StandaloneProvider>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end w-20">
+                  <CartLink />
                 </div>
               </div>
-
-              <div className="flex items-center justify-end w-20">
-                <Link href="/cart" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                  <span className="sr-only">Shopping Cart</span>
-                  <ShoppingCartIcon className="w-6 h-6" />
-                </Link>
-              </div>
             </div>
-          </div>
-        </header>
-        <div className="p-8">{children}</div>
+          </header>
+          <div className="p-8">{children}</div>
+        </MockedCartProvider>
       </body>
     </html>
   );
