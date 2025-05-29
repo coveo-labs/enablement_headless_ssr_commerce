@@ -24,4 +24,6 @@ export const {
   useParameterManager,
   usePopularViewedHome,
   useFacetGenerator,
+  useSort,
+  usePagination,
 } = engineDefinition.controllers;

@@ -1,5 +1,4 @@
 // lib/commerce-engine-config.ts
-
 import {
   CommerceEngineDefinitionOptions,
   defineProductList,
@@ -13,6 +12,8 @@ import {
   defineParameterManager,
   defineRecommendations,
   defineFacetGenerator,
+  defineSort,
+  definePagination,
 } from "@coveo/headless-react/ssr-commerce";
 
 export default {
@@ -36,5 +37,7 @@ export default {
     instantProducts: defineInstantProducts(),
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
+    sort: defineSort(),
+    pagination: definePagination(),
   },
 } satisfies CommerceEngineDefinitionOptions;

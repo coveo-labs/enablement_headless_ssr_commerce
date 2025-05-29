@@ -7,6 +7,8 @@ import { defaultContext } from "@/utils/context";
 import { buildParameterSerializer, CartInitialState } from "@coveo/headless-react/ssr-commerce";
 import ParameterManager from "@/components/parameter-manager";
 import { headers } from "next/headers";
+import Sort from "@/components/sort";
+import Pagination from "@/components/pagination";
 
 export default async function Search({ searchParams }: { searchParams: Promise<URLSearchParams> }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
@@ -43,8 +45,15 @@ export default async function Search({ searchParams }: { searchParams: Promise<U
           <div className="lg:col-span-1 order-1 lg:order-1">
             <FacetGenerator />
           </div>
+
           <div className="lg:col-span-3 order-2 lg:order-2">
+            <div className="flex justify-end mb-4">
+              <Sort />
+            </div>
             <ProductList />
+            <div className="flex justify-end mt-6">
+              <Pagination />
+            </div>
           </div>
         </div>
       </div>
