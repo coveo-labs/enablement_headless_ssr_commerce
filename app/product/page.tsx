@@ -27,7 +27,9 @@ export default async function ProductPage({
         <p>No product ID provided</p>
       )}
       <br />
-      This is a potential product page. The purpose of this page in the demo is to trigger a product view event
+      This is a potential product page. The purpose of this page in the demo is to trigger a product view event.
+      <br />
+      In a real life scenario, this page would be populated using a PIM or CMS
       <StandaloneProvider navigatorContext={navigatorContext.marshal} staticState={staticState}>
         <ProductView productId={productId} name={productName} price={productPrice} />
       </StandaloneProvider>

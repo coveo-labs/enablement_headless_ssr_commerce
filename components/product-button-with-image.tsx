@@ -13,7 +13,7 @@ export default function ProductButtonWithImage({ methods, product }: ProductButt
 
   const onProductClick = (product: Product) => {
     methods?.interactiveProduct({ options: { product } }).select();
-    router.push(`/product?id=${product.ec_product_id}`);
+    router.push(`/product?id=${product.ec_product_id}&name=${product.ec_name}&price=${product.ec_price}`);
   };
 
   return (

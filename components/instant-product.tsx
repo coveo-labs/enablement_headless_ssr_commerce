@@ -11,7 +11,7 @@ export default function InstantProducts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {state.products.map((product, index) => (
           <Link
-            href={`/product?id=${product.ec_product_id}`}
+            href={`/product?id=${product.ec_product_id}&name=${product.ec_name}&price=${product.ec_price}`}
             key={index}
             className="group flex flex-col hover:bg-blue-50 rounded p-2 transition-all duration-200 border border-transparent hover:border-blue-200"
           >
