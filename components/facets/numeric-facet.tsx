@@ -4,7 +4,7 @@ import { NumericFacet as HeadlessNumericFacet, NumericFacetState } from "@coveo/
 import { useEffect, useRef, useState } from "react";
 import FacetTitle from "./facet-title";
 import FacetClearButton from "./facet-clear-button";
-import { useFacetState } from "./useFacetState";
+import { useFacetState } from "./use-facet-state";
 
 interface NumericFacetProps {
   controller?: HeadlessNumericFacet;

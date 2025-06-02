@@ -7,7 +7,7 @@ import FacetSearchResults, { RegularFacetSearchResultsList } from "./facet-searc
 import FacetTitle from "./facet-title";
 import FacetClearButton from "./facet-clear-button";
 import FacetValueItem from "./facet-value-item";
-import { useFacetState } from "./useFacetState";
+import { useFacetState } from "./use-facet-state";
 
 interface RegularFacetProps {
   controller?: HeadlessRegularFacet;

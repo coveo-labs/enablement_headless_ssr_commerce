@@ -1,7 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
-import { NextJsNavigatorContext } from "./navigatorContextProvider";
+import { NextJsNavigatorContext } from "./navigator-context-provider";
 import {
   AvailableCommerceEngineDefinitions,
   AvailableRecommendationsSlots,

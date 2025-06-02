@@ -11,7 +11,7 @@ import FacetSearchResults, { CategoryFacetSearchResultsList } from "./facet-sear
 import FacetTitle from "./facet-title";
 import FacetClearButton from "./facet-clear-button";
 import FacetValueItem, { SelectedCategoryFacetValueItem } from "./facet-value-item";
-import { useFacetState } from "./useFacetState";
+import { useFacetState } from "./use-facet-state";
 
 interface CategoryFacetProps {
   controller?: HeadlessCategoryFacet;
