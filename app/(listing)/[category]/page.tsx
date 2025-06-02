@@ -1,12 +1,8 @@
 import ParameterManager from "@/components/parameter-manager";
 import ProductList from "@/components/product-list";
 import { ListingProvider } from "@/components/providers/providers";
-import { CartService } from "@/lib/cart-service";
-import { listingEngineDefinition } from "@/lib/commerce-engine";
-import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
-import { defaultContext } from "@/utils/context";
+import { fetchCoveoStaticState } from "@/lib/fetch-coveo-static-state";
 import { buildParameterSerializer } from "@coveo/headless-react/ssr-commerce";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 // This is a hardcoded list of categories that are available in my coveo merchandising hub.
@@ -31,30 +27,12 @@ export default async function Listing({
     notFound();
   }
 
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
   const { deserialize } = buildParameterSerializer();
   const parameters = deserialize(await searchParams);
 
-  // Fetches the cart items from the cart service
-  const items = CartService.getCartItemsWithMetadata();
-
-  // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState({
-    controllers: {
-      cart: { initialState: { items } },
-      context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
-        },
-      },
-      parameterManager: { initialState: { parameters } },
-    },
+  const { staticState, navigatorContext } = await fetchCoveoStaticState("listingEngineDefinition", {
+    urlParameters: parameters,
+    url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
   });
 
   return (

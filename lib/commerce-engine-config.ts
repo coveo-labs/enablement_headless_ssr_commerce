@@ -14,6 +14,7 @@ import {
   defineFacetGenerator,
   defineSort,
   definePagination,
+  defineProductView,
 } from "@coveo/headless-react/ssr-commerce";
 
 export default {
@@ -39,5 +40,6 @@ export default {
     facetGenerator: defineFacetGenerator(),
     sort: defineSort(),
     pagination: definePagination(),
+    productView: defineProductView(),
   },
 } satisfies CommerceEngineDefinitionOptions;

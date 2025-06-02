@@ -1,7 +1,7 @@
 import { Product, ProductList, Recommendations } from "@coveo/headless-react/ssr-commerce";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AddToCartButton from "./add-to-cart-button";
+import AddToCartButton from "./cart/add-to-cart-button";
 
 export interface ProductButtonWithImageProps {
   methods: Omit<Recommendations, "state" | "subscribe"> | Omit<ProductList, "state" | "subscribe"> | undefined;
@@ -19,11 +19,11 @@ export default function ProductButtonWithImage({ methods, product }: ProductButt
   return (
     <div
       key={product.ec_product_id}
-      className="rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 hover:shadow-lg transition-shadow"
+      className="rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
     >
       {/* Product image section */}
       <div className="relative overflow-hidden bg-gray-50 p-2 flex justify-center">
-        <button disabled={!methods} onClick={() => onProductClick(product)} className="w-full">
+        <button disabled={!methods} onClick={() => onProductClick(product)} className="w-full cursor-pointer">
           <Image
             src={product.ec_images[0]}
             alt={product.ec_name!}

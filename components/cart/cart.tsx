@@ -3,13 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMockedCartService } from "@/components/providers/cart-provider";
+import { useMockServerCartService } from "@/components/providers/server-cart-provider";
 import { useCart } from "@/lib/commerce-engine";
 
 export default function Cart() {
-  const { cartItems, updateQuantity, removeFromCart, subtotal, taxes, totalWithTax, checkout } = useMockedCartService();
+  const { cartItems, updateQuantity, removeFromCart, subtotal, taxes, totalWithTax, checkout, isLoading } =
+    useMockServerCartService();
   const coveoHeadlessCart = useCart();
-  console.log(coveoHeadlessCart.state.items);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -130,19 +130,23 @@ export default function Cart() {
               <div className="mt-8">
                 <button
                   type="button"
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                  onClick={() => {
-                    console.log(coveoHeadlessCart.state.items);
-                    const checkoutResult = checkout();
-                    if (checkoutResult.success) {
-                      coveoHeadlessCart.methods?.purchase({
-                        id: checkoutResult.transactionId,
-                        revenue: checkoutResult.revenue,
-                      });
+                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-blue-400"
+                  disabled={isLoading}
+                  onClick={async () => {
+                    try {
+                      const checkoutResult = await checkout();
+                      if (checkoutResult.success) {
+                        coveoHeadlessCart.methods?.purchase({
+                          id: checkoutResult.transactionId,
+                          revenue: checkoutResult.revenue,
+                        });
+                      }
+                    } catch (error) {
+                      console.error("Checkout failed:", error);
                     }
                   }}
                 >
-                  Proceed to Checkout
+                  {isLoading ? "Processing..." : "Proceed to Checkout"}
                 </button>
               </div>
 

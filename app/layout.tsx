@@ -1,14 +1,11 @@
 import Link from "next/link";
 import "./globals.css";
-import { StandaloneProvider, MockedCartProvider } from "@/components/providers/providers";
+import { StandaloneProvider } from "@/components/providers/providers";
 import SearchBox from "@/components/search-box";
-import CartLink from "@/components/cart-link";
-import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
-import { headers } from "next/headers";
-import { standaloneEngineDefinition } from "@/lib/commerce-engine";
-import { defaultContext } from "@/utils/context";
-import { CartService } from "@/lib/cart-service";
+import CartLink from "@/components/cart/cart-link";
 import Image from "next/image";
+import { fetchCoveoStaticState } from "@/lib/fetch-coveo-static-state";
+import { MockServerCartProvider } from "@/components/providers/providers";
 
 export const metadata = {
   title: "Headless SSR examples",
@@ -16,32 +13,12 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
-  standaloneEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
-  // Fetches the cart items from the cart service
-  const items = CartService.getCartItemsWithMetadata();
-
-  // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await standaloneEngineDefinition.fetchStaticState({
-    controllers: {
-      cart: { initialState: { items } },
-      context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: `https://sports.barca.group/`,
-        },
-      },
-    },
-  });
+  const { staticState, navigatorContext } = await fetchCoveoStaticState("standaloneEngineDefinition");
 
   return (
     <html lang="en">
       <body className="app-body">
-        <MockedCartProvider>
+        <MockServerCartProvider>
           <header className="sticky top-0 z-50 bg-white shadow-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
@@ -96,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </header>
           <div className="p-8">{children}</div>
-        </MockedCartProvider>
+        </MockServerCartProvider>
       </body>
     </html>
   );

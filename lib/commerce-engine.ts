@@ -10,8 +10,19 @@ export const {
   searchEngineDefinition,
   recommendationEngineDefinition,
   standaloneEngineDefinition,
-  useEngine,
 } = engineDefinition;
+
+export const allEngineDefinitions = {
+  recommendationEngineDefinition,
+  listingEngineDefinition,
+  searchEngineDefinition,
+  standaloneEngineDefinition,
+};
+
+export type AvailableCommerceEngineDefinitions = keyof typeof allEngineDefinitions;
+export type AvailableRecommendationsSlots = ["popularViewedHome"];
+export type AvailableStaticState<Definition extends AvailableCommerceEngineDefinitions> =
+  ReturnType<(typeof engineDefinition)[Definition]["fetchStaticState"]> extends Promise<infer R> ? R : never;
 
 export const {
   useCart,
@@ -26,4 +37,5 @@ export const {
   useFacetGenerator,
   useSort,
   usePagination,
+  useProductView,
 } = engineDefinition.controllers;

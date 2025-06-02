@@ -1,37 +1,15 @@
 import { RecommendationProvider } from "@/components/providers/providers";
 import PopularViewed from "@/components/recommendations/popular-viewed";
-import { standaloneEngineDefinition, recommendationEngineDefinition } from "@/lib/commerce-engine";
-import { NextJsNavigatorContext } from "@/lib/navigatorContextProvider";
-import { defaultContext } from "@/utils/context";
-import { headers } from "next/headers";
-import { CartService } from "@/lib/cart-service";
-
+import { fetchCoveoStaticState } from "@/lib/fetch-coveo-static-state";
 export default async function Home() {
-  // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
-  standaloneEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
-  // Fetches the cart items from the cart service
-  const items = CartService.getCartItemsWithMetadata();
-
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState({
-    controllers: {
-      popularViewedHome: { enabled: true },
-      cart: { initialState: { items } },
-      context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
-        view: {
-          url: `https://sports.barca.group/cart`,
-        },
-      },
-    },
+  const { staticState, navigatorContext } = await fetchCoveoStaticState("recommendationEngineDefinition", {
+    recommendationsSlots: ["popularViewedHome"],
   });
+
   return (
     <div>
       <h2>Welcome to our commerce store </h2>
-      <RecommendationProvider staticState={recsStaticState} navigatorContext={navigatorContext.marshal}>
+      <RecommendationProvider staticState={staticState} navigatorContext={navigatorContext.marshal}>
         <PopularViewed />
       </RecommendationProvider>
     </div>
