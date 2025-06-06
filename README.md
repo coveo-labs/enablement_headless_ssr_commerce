@@ -9,7 +9,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/coveo-labs/enablement_headless_ssr_commerce.git
 cd enablement_headless_ssr_commerce
 ```
 
