@@ -19,7 +19,19 @@ import {
 
 export default {
   configuration: {
-    ...getSampleCommerceEngineConfiguration(),
+      organizationId: 'xxx', 
+      accessToken: 'xxx', 
+      context: { 
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: 'https://sports.barca.group',
+        },
+      },
+      analytics: { 
+      trackingId: 'xxx',
+      },    
   },
   controllers: {
     cart: defineCart(),
