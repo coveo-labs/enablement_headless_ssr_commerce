@@ -30,11 +30,6 @@ export default {
     standaloneSearchBox: defineStandaloneSearchBox({
       options: { redirectionUrl: "/search" },
     }),
-    popularViewedHome: defineRecommendations({
-      options: {
-        slotId: "d73afbd2-8521-4ee6-a9b8-31f064721e73",
-      },
-    }),
     instantProducts: defineInstantProducts(),
     parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),

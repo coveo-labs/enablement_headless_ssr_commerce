@@ -79,7 +79,6 @@ export async function fetchCoveoStaticState<Definition extends AvailableCommerce
           url,
         },
       },
-      ...(definition === "recommendationEngineDefinition" && recommendationsToFetch),
     },
   });
 
