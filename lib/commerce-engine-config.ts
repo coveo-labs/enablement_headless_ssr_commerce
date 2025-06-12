@@ -8,30 +8,37 @@ import {
   defineSummary,
   defineStandaloneSearchBox,
   defineInstantProducts,
-  getSampleCommerceEngineConfiguration,
   defineParameterManager,
-  defineRecommendations,
   defineFacetGenerator,
   defineSort,
   definePagination,
   defineProductView,
+  ContextState,
 } from "@coveo/headless-react/ssr-commerce";
+
+export const defaultContext: {
+  language: string;
+  country: string;
+  currency: ContextState["currency"];
+} = {
+  language: "en",
+  country: "US",
+  currency: "USD",
+};
 
 export default {
   configuration: {
-      organizationId: 'xxx', 
-      accessToken: 'xxx', 
-      context: { 
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
-        view: {
-          url: 'https://sports.barca.group',
-        },
+    organizationId: "xxx",
+    accessToken: "xxx",
+    context: {
+      ...defaultContext,
+      view: {
+        url: "https://sports.barca.group",
       },
-      analytics: { 
-      trackingId: 'xxx',
-      },    
+    },
+    analytics: {
+      trackingId: "xxx",
+    },
   },
   controllers: {
     cart: defineCart(),

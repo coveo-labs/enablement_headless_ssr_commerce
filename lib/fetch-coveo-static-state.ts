@@ -9,23 +9,14 @@ import {
   engineDefinition,
 } from "./commerce-engine";
 import { getCartItemsWithMetadata } from "./cart-actions";
-import { CommerceSearchParameters, ContextState } from "@coveo/headless-react/ssr-commerce";
+import { CommerceSearchParameters } from "@coveo/headless-react/ssr-commerce";
+import { defaultContext } from "./commerce-engine-config";
 
 const defaultFetchCoveoStaticStateOptions = {
   url: "https://sports.barca.group",
   urlParameters: {},
   recommendationsSlots: [],
 } as const;
-
-const defaultContext: {
-  language: string;
-  country: string;
-  currency: ContextState["currency"];
-} = {
-  language: "en",
-  country: "US",
-  currency: "USD",
-};
 
 export async function fetchCoveoStaticState<Definition extends AvailableCommerceEngineDefinitions>(
   definition: Definition,
@@ -72,13 +63,12 @@ export async function fetchCoveoStaticState<Definition extends AvailableCommerce
       },
       cart: { initialState: { items } },
       context: {
-        language: defaultContext.language,
-        country: defaultContext.country,
-        currency: defaultContext.currency,
+        ...defaultContext,
         view: {
           url,
         },
       },
+      ...(definition === "recommendationEngineDefinition" && recommendationsToFetch),
     },
   });
 
