@@ -56,6 +56,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   >
                     Toys
                   </Link>
+                   <Link
+                    href="/All"
+                    className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
+                  >
+                    All
+                  </Link>
                 </nav>
 
                 <div className="flex-1 max-w-md mx-4">
